@@ -69,6 +69,7 @@ def main():
     from cjm_fasthtml_daisyui.core.resources import get_daisyui_headers
     from cjm_fasthtml_daisyui.core.testing import create_theme_persistence_script
     from cjm_fasthtml_daisyui.utilities.semantic_colors import bg_dui, text_dui, border_dui
+    from cjm_fasthtml_daisyui.utilities.border_radius import border_radius
 
     from cjm_fasthtml_tailwind.utilities.spacing import p, m
     from cjm_fasthtml_tailwind.utilities.sizing import max_w, min_h
@@ -102,6 +103,8 @@ def main():
     POSITION_INPUT_ID = f"{PREFIX}-position-input"
     VIEWPORT_ID = f"{PREFIX}-viewport"
     PROGRESS_ID = f"{PREFIX}-progress"
+    INTERACT_ID = f"{PREFIX}-interact-indicator"
+    ON_INTERACT_CB = f"on{PREFIX.capitalize()}ScrollbarInteract"
 
     app, rt = fast_app(
         pico=False,
@@ -183,6 +186,39 @@ def main():
             id=POSITION_INPUT_ID,
             name="position",
         )
+
+    def _render_interact_indicator():
+        """Render a badge that flashes on scrollbar interaction."""
+        return Div(
+            "Scrollbar idle",
+            id=INTERACT_ID,
+            cls=combine_classes(
+                p.x(3), p.y(1),
+                font_size.sm, text_dui.base_content.opacity(40),
+                border._1, border_dui.base_300, border_radius.field,
+                text_align.center,
+            ),
+        )
+
+    def _interact_indicator_js():
+        """JS callback that flashes the indicator on scrollbar interaction."""
+        return f"""
+        window['{ON_INTERACT_CB}'] = function() {{
+            var el = document.getElementById('{INTERACT_ID}');
+            if (!el) return;
+            el.textContent = 'Scrollbar active';
+            el.style.borderColor = 'oklch(var(--p))';
+            el.style.color = 'oklch(var(--p))';
+            el.style.opacity = '1';
+            clearTimeout(window._interactTimer);
+            window._interactTimer = setTimeout(function() {{
+                el.textContent = 'Scrollbar idle';
+                el.style.borderColor = '';
+                el.style.color = '';
+                el.style.opacity = '';
+            }}, 800);
+        }};
+        """
 
     def _build_nav_response():
         """Build OOB response tuple after navigation."""
@@ -271,6 +307,7 @@ def main():
             ids=sb_ids,
             position_input_id=POSITION_INPUT_ID,
             nav_url=f"{NAV_URL_PREFIX}/nav_to_index",
+            on_interact=ON_INTERACT_CB,
         )
 
         def page_content():
@@ -278,7 +315,8 @@ def main():
                 H1("Virtual Scrollbar Demo",
                    cls=combine_classes(font_size._3xl, font_weight.bold, m.b(2))),
                 P(f"{state.total_items} items — use keyboard "
-                  f"(Up/Down/PgUp/PgDown/Home/End) or drag the scrollbar",
+                  f"(Up/Down/PgUp/PgDown/Home/End) or drag/click the scrollbar. "
+                  f"The indicator below flashes on scrollbar interaction only.",
                   cls=combine_classes(
                       font_size.sm, text_dui.base_content.opacity(60), m.b(4),
                   )),
@@ -295,8 +333,13 @@ def main():
                     style="height: calc(100vh - 200px);",
                 ),
 
-                # Progress
-                _render_progress(),
+                # Progress + interaction indicator
+                Div(
+                    _render_progress(),
+                    _render_interact_indicator(),
+                    cls=combine_classes(flex_display, gap(4)),
+                    style="align-items: center; justify-content: center;",
+                ),
 
                 # Hidden input for scrollbar position sync
                 _render_hidden_input(),
@@ -304,6 +347,7 @@ def main():
                 # Scripts
                 Script(_keyboard_js()),
                 Script(scrollbar_js),
+                Script(_interact_indicator_js()),
 
                 cls=combine_classes(max_w('4xl'), m.x.auto, p(6)),
             )

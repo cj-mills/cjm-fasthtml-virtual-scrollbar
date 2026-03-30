@@ -190,6 +190,7 @@ def generate_scrollbar_js(
     position_input_id: str,      # ID of hidden input (kept for API compat, not used for position sync)
     nav_url: str,                # URL to POST target index to
     nav_param: str = "target_index",  # Parameter name for the index value
+    on_interact: str = "",       # JS callback name, called on user interaction start (drag/click)
 ) -> str:  # JavaScript IIFE code fragment
     "Generate JS for scrollbar: thumb positioning from track data + drag/click interaction."
 ```

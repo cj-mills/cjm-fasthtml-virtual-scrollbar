@@ -14,8 +14,13 @@ def generate_scrollbar_js(
     position_input_id: str,      # ID of hidden input (kept for API compat, not used for position sync)
     nav_url: str,                # URL to POST target index to
     nav_param: str = "target_index",  # Parameter name for the index value
+    on_interact: str = "",       # JS callback name, called on user interaction start (drag/click)
 ) -> str:  # JavaScript IIFE code fragment
     """Generate JS for scrollbar: thumb positioning from track data + drag/click interaction."""
+    _interact_js = (
+        f"if (typeof window['{on_interact}'] === 'function') window['{on_interact}']();"
+        if on_interact else ""
+    )
     return f"""
         // === Virtual Scrollbar ({ids.prefix}) ===
         (function() {{
@@ -153,6 +158,7 @@ def generate_scrollbar_js(
                     if (evt.button !== 0) return;
                     evt.preventDefault();
                     evt.stopPropagation();
+                    {_interact_js}
                     _isDragging = true;
                     _lastNavIndex = -1;
                     thumb.style.cursor = 'grabbing';
@@ -167,6 +173,7 @@ def generate_scrollbar_js(
                     const currentThumb = _getThumb();
                     if (currentThumb && (evt.target === currentThumb || currentThumb.contains(evt.target))) return;
                     evt.preventDefault();
+                    {_interact_js}
                     const index = _calcTargetIndex(evt.clientY);
                     _lastNavIndex = -1;
                     _navToIndex(index);
