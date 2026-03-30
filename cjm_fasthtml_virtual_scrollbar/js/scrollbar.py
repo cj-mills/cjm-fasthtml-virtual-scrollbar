@@ -26,6 +26,17 @@ def generate_scrollbar_js(
             function _getThumb() {{ return document.getElementById('{ids.thumb}'); }}
             function _getPositionInput() {{ return document.getElementById('{position_input_id}'); }}
 
+            function _getMaxPosition(track) {{
+                // Read max position from data attribute (set by server render).
+                // Defaults to totalItems - visibleCount if not present.
+                if (track.dataset.maxPosition !== undefined) {{
+                    return parseInt(track.dataset.maxPosition);
+                }}
+                const totalItems = parseInt(track.dataset.totalItems || '0');
+                const visibleCount = parseInt(track.dataset.visibleCount || '1');
+                return Math.max(0, totalItems - visibleCount);
+            }}
+
             function _positionThumbFromState() {{
                 // Read state from DOM and position thumb via direct style manipulation.
                 // Called after each HTMX settle — the hidden input carries the latest position.
@@ -48,8 +59,8 @@ def generate_scrollbar_js(
                     (visibleCount / totalItems) * 100,
                     (track.offsetHeight > 0) ? (24 / track.offsetHeight) * 100 : 4
                 );
-                const maxStart = Math.max(1, totalItems - visibleCount);
-                const thumbTopPct = (position / maxStart) * (100 - thumbHeightPct);
+                const maxPos = Math.max(1, _getMaxPosition(track));
+                const thumbTopPct = (position / maxPos) * (100 - thumbHeightPct);
 
                 thumb.style.top = thumbTopPct.toFixed(2) + '%';
                 thumb.style.height = thumbHeightPct.toFixed(2) + '%';
@@ -59,11 +70,9 @@ def generate_scrollbar_js(
                 const track = _getTrack();
                 if (!track) return 0;
                 const rect = track.getBoundingClientRect();
-                const totalItems = parseInt(track.dataset.totalItems || '0');
-                const visibleCount = parseInt(track.dataset.visibleCount || '1');
-                const maxStart = Math.max(0, totalItems - visibleCount);
+                const maxPos = Math.max(0, _getMaxPosition(track));
                 const relY = Math.max(0, Math.min(pointerY - rect.top, rect.height));
-                return Math.round((relY / rect.height) * maxStart);
+                return Math.round((relY / rect.height) * maxPos);
             }}
 
             function _updateThumbPosition(pointerY) {{

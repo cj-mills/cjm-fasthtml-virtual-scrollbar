@@ -7,6 +7,7 @@ __all__ = ['ScrollbarConfig', 'ScrollbarState', 'ScrollbarIds']
 
 # %% ../../nbs/core/models.ipynb #f2b36840
 from dataclasses import dataclass
+from typing import Optional
 
 # %% ../../nbs/core/models.ipynb #39993167
 @dataclass
@@ -21,9 +22,10 @@ class ScrollbarConfig:
 @dataclass
 class ScrollbarState:
     """Mutable runtime state for a virtual scrollbar."""
-    position: int = 0                    # Current position (0-indexed)
-    visible_count: int = 1               # Number of visible items
-    total_items: int = 0                 # Total item count
+    position: int = 0                              # Current position (0-indexed)
+    visible_count: int = 1                         # Number of visible items
+    total_items: int = 0                           # Total item count
+    max_position: Optional[int] = None             # Upper bound of position range (None = total_items - visible_count)
 
 # %% ../../nbs/core/models.ipynb #b73c24d4
 @dataclass

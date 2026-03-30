@@ -31,8 +31,8 @@ graph LR
     core_models[core.models<br/>models]
     js_scrollbar[js.scrollbar<br/>scrollbar]
 
-    components_scrollbar --> core_models
     components_scrollbar --> core_math
+    components_scrollbar --> core_models
     js_scrollbar --> core_models
 ```
 
@@ -66,6 +66,7 @@ def compute_scrollbar(position: int,           # Current position (0-indexed)
                       total_items: int,          # Total item count
                       track_height: float,       # Scrollbar track height in px
                       min_thumb_height: int = 24,  # Minimum thumb height in px
+                      max_position: Optional[int] = None,  # Upper bound of position range (None = total_items - visible_count)
                      ) -> Tuple[float, float]:   # (thumb_top_percent, thumb_height_percent)
     "Compute scrollbar thumb position and size as percentages."
 ```
@@ -106,6 +107,7 @@ class ScrollbarState:
     position: int = 0  # Current position (0-indexed)
     visible_count: int = 1  # Number of visible items
     total_items: int = 0  # Total item count
+    max_position: Optional[int]  # Upper bound of position range (None = total_items - visible_count)
 ```
 
 ``` python
