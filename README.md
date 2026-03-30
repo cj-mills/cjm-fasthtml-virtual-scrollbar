@@ -8,3 +8,183 @@
 ``` bash
 pip install cjm_fasthtml_virtual_scrollbar
 ```
+
+## Project Structure
+
+    nbs/
+    ├── components/ (1)
+    │   └── scrollbar.ipynb  # Custom scrollbar component with proportional thumb for position indication.
+    ├── core/ (2)
+    │   ├── math.ipynb    # Pure math functions for scrollbar thumb position and size calculation.
+    │   └── models.ipynb  # Data models for scrollbar configuration, state, and HTML ID generation.
+    └── js/ (1)
+        └── scrollbar.ipynb  # JavaScript generator for custom scrollbar interaction (drag thumb, click track, position sync).
+
+Total: 4 notebooks across 3 directories
+
+## Module Dependencies
+
+``` mermaid
+graph LR
+    components_scrollbar[components.scrollbar<br/>scrollbar]
+    core_math[core.math<br/>math]
+    core_models[core.models<br/>models]
+    js_scrollbar[js.scrollbar<br/>scrollbar]
+
+    components_scrollbar --> core_models
+    components_scrollbar --> core_math
+    js_scrollbar --> core_models
+```
+
+*3 cross-module dependencies detected*
+
+## CLI Reference
+
+No CLI commands found in this project.
+
+## Module Overview
+
+Detailed documentation for each module in the project:
+
+### math (`math.ipynb`)
+
+> Pure math functions for scrollbar thumb position and size calculation.
+
+#### Import
+
+``` python
+from cjm_fasthtml_virtual_scrollbar.core.math import (
+    compute_scrollbar
+)
+```
+
+#### Functions
+
+``` python
+def compute_scrollbar(position: int,           # Current position (0-indexed)
+                      visible_count: int,       # Number of visible items
+                      total_items: int,          # Total item count
+                      track_height: float,       # Scrollbar track height in px
+                      min_thumb_height: int = 24,  # Minimum thumb height in px
+                     ) -> Tuple[float, float]:   # (thumb_top_percent, thumb_height_percent)
+    "Compute scrollbar thumb position and size as percentages."
+```
+
+### models (`models.ipynb`)
+
+> Data models for scrollbar configuration, state, and HTML ID
+> generation.
+
+#### Import
+
+``` python
+from cjm_fasthtml_virtual_scrollbar.core.models import (
+    ScrollbarConfig,
+    ScrollbarState,
+    ScrollbarIds
+)
+```
+
+#### Classes
+
+``` python
+@dataclass
+class ScrollbarConfig:
+    "Initialization-time configuration for a virtual scrollbar."
+    
+    prefix: str = 'sb'  # HTML ID prefix
+    show_scrollbar: bool = True  # Enable/disable scrollbar rendering
+    min_thumb_height: int = 24  # Minimum thumb height in pixels
+    track_width: int = 3  # Track width in Tailwind units (w-3 = 12px)
+```
+
+``` python
+@dataclass
+class ScrollbarState:
+    "Mutable runtime state for a virtual scrollbar."
+    
+    position: int = 0  # Current position (0-indexed)
+    visible_count: int = 1  # Number of visible items
+    total_items: int = 0  # Total item count
+```
+
+``` python
+@dataclass
+class ScrollbarIds:
+    "HTML element ID generators for a scrollbar instance."
+    
+    prefix: str = 'sb'  # Instance prefix
+    
+    def track(self) -> str: return f"{self.prefix}-scrollbar-track"  # Scrollbar track container
+    
+        @property
+        def thumb(self) -> str: return f"{self.prefix}-scrollbar-thumb"  # Draggable thumb element
+    
+    def thumb(self) -> str: return f"{self.prefix}-scrollbar-thumb"  # Draggable thumb element
+```
+
+### scrollbar (`scrollbar.ipynb`)
+
+> Custom scrollbar component with proportional thumb for position
+> indication.
+
+#### Import
+
+``` python
+from cjm_fasthtml_virtual_scrollbar.components.scrollbar import (
+    render_scrollbar_thumb,
+    render_scrollbar
+)
+```
+
+#### Functions
+
+``` python
+def render_scrollbar_thumb(
+    state: ScrollbarState,       # Scrollbar state
+    config: ScrollbarConfig,     # Scrollbar config
+    ids: ScrollbarIds,           # HTML IDs
+    track_height: float = 600.0, # Track height for min thumb calculation
+    oob: bool = False,           # Whether to include hx-swap-oob
+) -> Div:  # Thumb element
+    "Render the scrollbar thumb at the correct position."
+```
+
+``` python
+def _build_track_cls(track_width: int) -> str:  # Combined CSS class string
+    "Build track CSS classes for a given width."
+```
+
+``` python
+def render_scrollbar(
+    state: ScrollbarState,       # Scrollbar state
+    config: ScrollbarConfig,     # Scrollbar config
+    ids: ScrollbarIds,           # HTML IDs
+) -> Div:  # Complete scrollbar (track + thumb)
+    "Render the custom scrollbar with track and proportional thumb."
+```
+
+### scrollbar (`scrollbar.ipynb`)
+
+> JavaScript generator for custom scrollbar interaction (drag thumb,
+> click track, position sync).
+
+#### Import
+
+``` python
+from cjm_fasthtml_virtual_scrollbar.js.scrollbar import (
+    generate_scrollbar_js
+)
+```
+
+#### Functions
+
+``` python
+def generate_scrollbar_js(
+    ids: ScrollbarIds,           # Scrollbar HTML IDs (track, thumb)
+    position_input_id: str,      # ID of hidden input carrying current position
+    nav_url: str,                # URL to POST target index to
+    nav_param: str = "target_index",  # Parameter name for the index value
+) -> str:  # JavaScript IIFE code fragment
+    "Generate JS for scrollbar: thumb positioning from hidden input + drag/click interaction."
+```
