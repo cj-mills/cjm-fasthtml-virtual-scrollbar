@@ -26,6 +26,7 @@ class ScrollbarState:
     visible_count: int = 1                         # Number of visible items
     total_items: int = 0                           # Total item count
     max_position: Optional[int] = None             # Upper bound of position range (None = total_items - visible_count)
+    thumb_ratio: Optional[float] = None            # Thumb height as fraction of track (None = visible_count / total_items)
 
 # %% ../../nbs/core/models.ipynb #b73c24d4
 @dataclass

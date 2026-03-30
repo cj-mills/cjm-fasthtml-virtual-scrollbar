@@ -15,13 +15,17 @@ def compute_scrollbar(position: int,           # Current position (0-indexed)
                       track_height: float,       # Scrollbar track height in px
                       min_thumb_height: int = 24,  # Minimum thumb height in px
                       max_position: Optional[int] = None,  # Upper bound of position range (None = total_items - visible_count)
+                      thumb_ratio: Optional[float] = None,  # Thumb height as fraction of track (None = visible_count / total_items)
                      ) -> Tuple[float, float]:   # (thumb_top_percent, thumb_height_percent)
     """Compute scrollbar thumb position and size as percentages."""
     if total_items <= 0 or visible_count >= total_items:
         return (0.0, 100.0)  # Thumb fills entire track
 
-    # Thumb height as proportion of visible/total
-    thumb_height_pct = (visible_count / total_items) * 100.0
+    # Thumb height: use explicit ratio if provided, else visible/total
+    if thumb_ratio is not None:
+        thumb_height_pct = thumb_ratio * 100.0
+    else:
+        thumb_height_pct = (visible_count / total_items) * 100.0
 
     # Enforce minimum thumb height
     if track_height > 0:
@@ -29,8 +33,6 @@ def compute_scrollbar(position: int,           # Current position (0-indexed)
         thumb_height_pct = max(thumb_height_pct, min_pct)
 
     # Thumb position: proportion of position within scrollable range
-    # max_position defaults to total_items - visible_count (window-start model)
-    # Card stacks override to total_items - 1 (focused-index model)
     max_pos = max_position if max_position is not None else (total_items - visible_count)
     max_pos = max(1, max_pos)
     thumb_top_pct = (position / max_pos) * (100.0 - thumb_height_pct)

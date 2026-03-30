@@ -32,6 +32,7 @@ def render_scrollbar_thumb(
         state.position, state.visible_count, state.total_items,
         track_height, config.min_thumb_height,
         max_position=state.max_position,
+        thumb_ratio=state.thumb_ratio,
     )
 
     thumb = Div(
@@ -74,11 +75,20 @@ def render_scrollbar(
     # Compute effective max_position for JS to read
     max_pos = state.max_position if state.max_position is not None else (state.total_items - state.visible_count)
 
+    # Build track attributes
+    track_attrs = dict(
+        data_total_items=str(state.total_items),
+        data_visible_count=str(state.visible_count),
+        data_max_position=str(max_pos),
+    )
+
+    # Optional thumb_ratio for JS (when not using default visible_count/total_items)
+    if state.thumb_ratio is not None:
+        track_attrs["data_thumb_ratio"] = f"{state.thumb_ratio:.6f}"
+
     return Div(
         thumb,
         id=ids.track,
         cls=_build_track_cls(config.track_width),
-        data_total_items=str(state.total_items),
-        data_visible_count=str(state.visible_count),
-        data_max_position=str(max_pos),
+        **track_attrs,
     )

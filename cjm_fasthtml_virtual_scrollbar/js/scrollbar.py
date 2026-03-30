@@ -37,6 +37,30 @@ def generate_scrollbar_js(
                 return Math.max(0, totalItems - visibleCount);
             }}
 
+            function _getThumbHeightPct(track) {{
+                // Compute thumb height as percentage. Uses data-thumb-ratio if present,
+                // else falls back to visibleCount / totalItems.
+                const totalItems = parseInt(track.dataset.totalItems || '0');
+                const visibleCount = parseInt(track.dataset.visibleCount || '1');
+                if (totalItems <= 0) return 100;
+
+                let pct;
+                if (track.dataset.thumbRatio !== undefined) {{
+                    pct = parseFloat(track.dataset.thumbRatio) * 100;
+                }} else {{
+                    pct = (visibleCount / totalItems) * 100;
+                }}
+
+                // Enforce minimum thumb height
+                if (track.offsetHeight > 0) {{
+                    const minPct = (24 / track.offsetHeight) * 100;
+                    pct = Math.max(pct, minPct);
+                }} else {{
+                    pct = Math.max(pct, 4);
+                }}
+                return pct;
+            }}
+
             function _positionThumbFromState() {{
                 // Read state from DOM and position thumb via direct style manipulation.
                 // Called after each HTMX settle — the hidden input carries the latest position.
@@ -55,10 +79,7 @@ def generate_scrollbar_js(
                     return;
                 }}
 
-                const thumbHeightPct = Math.max(
-                    (visibleCount / totalItems) * 100,
-                    (track.offsetHeight > 0) ? (24 / track.offsetHeight) * 100 : 4
-                );
+                const thumbHeightPct = _getThumbHeightPct(track);
                 const maxPos = Math.max(1, _getMaxPosition(track));
                 const thumbTopPct = (position / maxPos) * (100 - thumbHeightPct);
 
