@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "cjm-fasthtml-virtual-scrollbar"
+  site-url: "https://cj-mills.github.io/cjm-fasthtml-virtual-scrollbar"
+  description: "FastHTML virtual scrollbar component with drag-to-scrub, click-to-jump, and position indication for discrete-navigation containers."
+  repo-branch: main
+  repo-url: "https://github.com/cj-mills/cjm-fasthtml-virtual-scrollbar"
