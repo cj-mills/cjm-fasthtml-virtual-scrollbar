@@ -11,11 +11,11 @@ from ..core.models import ScrollbarIds
 # %% ../../nbs/js/scrollbar.ipynb #323652be
 def generate_scrollbar_js(
     ids: ScrollbarIds,           # Scrollbar HTML IDs (track, thumb)
-    position_input_id: str,      # ID of hidden input carrying current position
+    position_input_id: str,      # ID of hidden input (kept for API compat, not used for position sync)
     nav_url: str,                # URL to POST target index to
     nav_param: str = "target_index",  # Parameter name for the index value
 ) -> str:  # JavaScript IIFE code fragment
-    """Generate JS for scrollbar: thumb positioning from hidden input + drag/click interaction."""
+    """Generate JS for scrollbar: thumb positioning from track data + drag/click interaction."""
     return f"""
         // === Virtual Scrollbar ({ids.prefix}) ===
         (function() {{
@@ -24,7 +24,6 @@ def generate_scrollbar_js(
 
             function _getTrack() {{ return document.getElementById('{ids.track}'); }}
             function _getThumb() {{ return document.getElementById('{ids.thumb}'); }}
-            function _getPositionInput() {{ return document.getElementById('{position_input_id}'); }}
 
             function _getMaxPosition(track) {{
                 // Read max position from data attribute (set by server render).
@@ -62,16 +61,16 @@ def generate_scrollbar_js(
             }}
 
             function _positionThumbFromState() {{
-                // Read state from DOM and position thumb via direct style manipulation.
-                // Called after each HTMX settle — the hidden input carries the latest position.
+                // Read position from track's own data-position attribute.
+                // The scrollbar track is OOB-updated with fresh data on every navigation,
+                // making position sync self-contained (no dependency on external hidden inputs).
                 const track = _getTrack();
                 const thumb = _getThumb();
-                const input = _getPositionInput();
-                if (!track || !thumb || !input) return;
+                if (!track || !thumb) return;
 
                 const totalItems = parseInt(track.dataset.totalItems || '0');
                 const visibleCount = parseInt(track.dataset.visibleCount || '1');
-                const position = parseInt(input.value || '0');
+                const position = parseInt(track.dataset.position || '0');
 
                 if (totalItems <= 0 || visibleCount >= totalItems) {{
                     thumb.style.top = '0%';
@@ -178,7 +177,7 @@ def generate_scrollbar_js(
             _positionThumbFromState();
             _setupScrollbar();
 
-            // After each HTMX settle, re-position thumb from updated hidden input
+            // After each HTMX settle, re-position thumb from updated track data
             document.body.addEventListener('htmx:afterSettle', function() {{
                 if (!_isDragging) {{
                     _positionThumbFromState();

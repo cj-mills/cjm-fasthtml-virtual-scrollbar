@@ -31,8 +31,8 @@ graph LR
     core_models[core.models<br/>models]
     js_scrollbar[js.scrollbar<br/>scrollbar]
 
-    components_scrollbar --> core_math
     components_scrollbar --> core_models
+    components_scrollbar --> core_math
     js_scrollbar --> core_models
 ```
 
@@ -187,9 +187,9 @@ from cjm_fasthtml_virtual_scrollbar.js.scrollbar import (
 ``` python
 def generate_scrollbar_js(
     ids: ScrollbarIds,           # Scrollbar HTML IDs (track, thumb)
-    position_input_id: str,      # ID of hidden input carrying current position
+    position_input_id: str,      # ID of hidden input (kept for API compat, not used for position sync)
     nav_url: str,                # URL to POST target index to
     nav_param: str = "target_index",  # Parameter name for the index value
 ) -> str:  # JavaScript IIFE code fragment
-    "Generate JS for scrollbar: thumb positioning from hidden input + drag/click interaction."
+    "Generate JS for scrollbar: thumb positioning from track data + drag/click interaction."
 ```

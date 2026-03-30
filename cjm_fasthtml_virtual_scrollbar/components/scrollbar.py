@@ -77,11 +77,12 @@ def render_scrollbar(
     max_pos = state.max_position if state.max_position is not None else (state.total_items - state.visible_count)
     max_pos = max(0, max_pos)
 
-    # Build track attributes
+    # Build track attributes — position is on the track itself for self-contained sync
     track_attrs = dict(
         data_total_items=str(state.total_items),
         data_visible_count=str(state.visible_count),
         data_max_position=str(max_pos),
+        data_position=str(state.position),
     )
 
     # Optional thumb_ratio for JS (when not using default visible_count/total_items)
