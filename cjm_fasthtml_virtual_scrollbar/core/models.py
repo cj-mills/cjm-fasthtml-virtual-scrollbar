@@ -17,6 +17,7 @@ class ScrollbarConfig:
     show_scrollbar: bool = True          # Enable/disable scrollbar rendering
     min_thumb_height: int = 24           # Minimum thumb height in pixels
     track_width: int = 3                 # Track width in Tailwind units (w-3 = 12px)
+    auto_hide: bool = True               # Hide when total_items <= visible_count
 
 # %% ../../nbs/core/models.ipynb #bad31c56
 @dataclass

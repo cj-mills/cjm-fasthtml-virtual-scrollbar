@@ -11,7 +11,7 @@ from fasthtml.common import Div
 from cjm_fasthtml_tailwind.utilities.sizing import w
 from cjm_fasthtml_tailwind.utilities.layout import position, display_tw
 from cjm_fasthtml_tailwind.utilities.flexbox_and_grid import shrink
-from cjm_fasthtml_tailwind.utilities.interactivity import cursor, select
+from cjm_fasthtml_tailwind.utilities.interactivity import cursor, select, touch
 from cjm_fasthtml_tailwind.core.base import combine_classes
 
 from cjm_fasthtml_daisyui.utilities.semantic_colors import bg_dui
@@ -57,7 +57,7 @@ def _build_track_cls(track_width: int) -> str:  # Combined CSS class string
     return combine_classes(
         w(track_width), shrink._0, position.relative, border_radius.field,
         bg_dui.base_content.opacity(10),
-        cursor.pointer, select.none,
+        cursor.pointer, select.none, touch.none,
     )
 
 # %% ../../nbs/components/scrollbar.ipynb #45ea740d
@@ -67,14 +67,15 @@ def render_scrollbar(
     ids: ScrollbarIds,           # HTML IDs
 ) -> Div:  # Complete scrollbar (track + thumb)
     """Render the custom scrollbar with track and proportional thumb."""
-    # Hide track when all items visible, but keep element for consistent layout
-    if state.total_items <= state.visible_count:
+    # Auto-hide when all items visible (unless auto_hide is disabled)
+    if config.auto_hide and state.total_items <= state.visible_count:
         return Div(id=ids.track, cls=str(display_tw.hidden))
 
     thumb = render_scrollbar_thumb(state, config, ids)
 
     # Compute effective max_position for JS to read
     max_pos = state.max_position if state.max_position is not None else (state.total_items - state.visible_count)
+    max_pos = max(0, max_pos)
 
     # Build track attributes
     track_attrs = dict(

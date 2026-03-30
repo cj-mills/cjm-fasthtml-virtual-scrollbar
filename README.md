@@ -31,8 +31,8 @@ graph LR
     core_models[core.models<br/>models]
     js_scrollbar[js.scrollbar<br/>scrollbar]
 
-    components_scrollbar --> core_models
     components_scrollbar --> core_math
+    components_scrollbar --> core_models
     js_scrollbar --> core_models
 ```
 
@@ -98,6 +98,7 @@ class ScrollbarConfig:
     show_scrollbar: bool = True  # Enable/disable scrollbar rendering
     min_thumb_height: int = 24  # Minimum thumb height in pixels
     track_width: int = 3  # Track width in Tailwind units (w-3 = 12px)
+    auto_hide: bool = True  # Hide when total_items <= visible_count
 ```
 
 ``` python
