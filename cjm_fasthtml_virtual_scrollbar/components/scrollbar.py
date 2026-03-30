@@ -10,6 +10,7 @@ from fasthtml.common import Div
 
 from cjm_fasthtml_tailwind.utilities.sizing import w
 from cjm_fasthtml_tailwind.utilities.layout import position, display_tw
+from cjm_fasthtml_tailwind.utilities.flexbox_and_grid import shrink
 from cjm_fasthtml_tailwind.utilities.interactivity import cursor, select
 from cjm_fasthtml_tailwind.core.base import combine_classes
 
@@ -54,7 +55,7 @@ def render_scrollbar_thumb(
 def _build_track_cls(track_width: int) -> str:  # Combined CSS class string
     """Build track CSS classes for a given width."""
     return combine_classes(
-        w(track_width), position.relative, border_radius.field,
+        w(track_width), shrink._0, position.relative, border_radius.field,
         bg_dui.base_content.opacity(10),
         cursor.pointer, select.none,
     )
