@@ -69,7 +69,13 @@ def compute_scrollbar(position: int,           # Current position (0-indexed)
                       max_position: Optional[int] = None,  # Upper bound of position range (None = total_items - visible_count)
                       thumb_ratio: Optional[float] = None,  # Thumb height as fraction of track (None = visible_count / total_items)
                      ) -> Tuple[float, float]:   # (thumb_top_percent, thumb_height_percent)
-    "Compute scrollbar thumb position and size as percentages."
+    """
+    Compute scrollbar thumb position and size as percentages.
+    
+    When thumb_ratio and max_position are explicitly provided (cursor-based
+    model), the thumb size and range are fully determined by those values
+    regardless of the visible_count vs total_items relationship.
+    """
 ```
 
 ### models (`models.ipynb`)

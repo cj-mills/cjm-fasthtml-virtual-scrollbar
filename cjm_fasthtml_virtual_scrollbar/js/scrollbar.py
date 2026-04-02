@@ -30,6 +30,13 @@ def generate_scrollbar_js(
             function _getTrack() {{ return document.getElementById('{ids.track}'); }}
             function _getThumb() {{ return document.getElementById('{ids.thumb}'); }}
 
+            function _isCursorMode(track) {{
+                // Cursor-based mode: explicit thumb_ratio and max_position on track.
+                // In this mode, the scrollbar always shows a proportional thumb
+                // regardless of visible vs total item count.
+                return track.dataset.thumbRatio !== undefined && track.dataset.maxPosition !== undefined;
+            }}
+
             function _getMaxPosition(track) {{
                 // Read max position from data attribute (set by server render).
                 // Defaults to totalItems - visibleCount if not present.
@@ -77,7 +84,10 @@ def generate_scrollbar_js(
                 const visibleCount = parseInt(track.dataset.visibleCount || '1');
                 const position = parseInt(track.dataset.position || '0');
 
-                if (totalItems <= 0 || visibleCount >= totalItems) {{
+                // In default (window) mode, all items visible means nothing to scroll.
+                // In cursor mode (explicit thumb_ratio + max_position), always show
+                // proportional thumb as a position indicator.
+                if (totalItems <= 0 || (!_isCursorMode(track) && visibleCount >= totalItems)) {{
                     thumb.style.top = '0%';
                     thumb.style.height = '100%';
                     return;
