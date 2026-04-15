@@ -24,6 +24,12 @@ def generate_scrollbar_js(
     return f"""
         // === Virtual Scrollbar ({ids.prefix}) ===
         (function() {{
+            // Pure server-authoritative drag model: pointer events compute a target index
+            // and fire HTMX; the thumb visually moves only when the server's OOB swap lands
+            // and _positionThumbFromState reads the fresh data attributes. No client-side
+            // optimistic thumb movement — same single-source-of-truth model used for
+            // keyboard nav in consumer libraries. Eliminates the "client paints, server
+            // corrects" jitter that a hybrid model is subject to.
             let _isDragging = false;
             let _lastNavIndex = -1;
 
@@ -110,18 +116,6 @@ def generate_scrollbar_js(
                 return Math.round((relY / rect.height) * maxPos);
             }}
 
-            function _updateThumbPosition(pointerY) {{
-                // Direct DOM update for real-time visual feedback during drag
-                const track = _getTrack();
-                const thumb = _getThumb();
-                if (!track || !thumb) return;
-                const rect = track.getBoundingClientRect();
-                const thumbHeight = thumb.offsetHeight;
-                const maxTop = rect.height - thumbHeight;
-                const relY = Math.max(0, Math.min(pointerY - rect.top - thumbHeight / 2, maxTop));
-                thumb.style.top = relY + 'px';
-            }}
-
             function _navToIndex(index) {{
                 if (index === _lastNavIndex) return;  // Deduplicate
                 _lastNavIndex = index;
@@ -136,7 +130,8 @@ def generate_scrollbar_js(
             function _onDragMove(evt) {{
                 if (!_isDragging) return;
                 evt.preventDefault();
-                _updateThumbPosition(evt.clientY);
+                // Pure server-authoritative: translate cursor to index, fire HTMX.
+                // The OOB response is what moves the thumb — no client-side paint here.
                 const index = _calcTargetIndex(evt.clientY);
                 _navToIndex(index);
             }}
@@ -190,16 +185,21 @@ def generate_scrollbar_js(
                 }}, opts);
             }}
 
+            // Shared handler for htmx swap/settle events — syncs thumb from the fresh
+            // server data attributes. Skip listener re-setup during drag so we don't
+            // abort and replace the pointerdown listeners on a thumb that's mid-interaction
+            // (document-level pointermove/pointerup are not affected either way).
+            function _onHtmxMutation() {{
+                _positionThumbFromState();
+                if (!_isDragging) _setupScrollbar();
+            }}
+
             // Position thumb on initial load
             _positionThumbFromState();
             _setupScrollbar();
 
-            // After each HTMX settle, re-position thumb from updated track data
-            document.body.addEventListener('htmx:afterSettle', function() {{
-                if (!_isDragging) {{
-                    _positionThumbFromState();
-                    _setupScrollbar();
-                }}
-            }});
+            // Listen to both afterSwap (immediate) and afterSettle (safety net).
+            document.body.addEventListener('htmx:afterSwap', _onHtmxMutation);
+            document.body.addEventListener('htmx:afterSettle', _onHtmxMutation);
         }})();
     """

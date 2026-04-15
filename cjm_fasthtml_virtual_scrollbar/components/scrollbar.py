@@ -8,7 +8,7 @@ __all__ = ['render_scrollbar_thumb', 'render_scrollbar']
 # %% ../../nbs/components/scrollbar.ipynb #638a6268
 from fasthtml.common import Div
 
-from cjm_fasthtml_tailwind.utilities.sizing import w
+from cjm_fasthtml_tailwind.utilities.sizing import w, min_h
 from cjm_fasthtml_tailwind.utilities.layout import position, display_tw
 from cjm_fasthtml_tailwind.utilities.flexbox_and_grid import shrink
 from cjm_fasthtml_tailwind.utilities.interactivity import cursor, select, touch
@@ -36,10 +36,14 @@ def render_scrollbar_thumb(
         thumb_ratio=state.thumb_ratio,
     )
 
+    # min-h-6 (24px) is a CSS-level floor on the thumb's visual size, enforced
+    # regardless of whether Python's `track_height` parameter matches the live DOM
+    # track height. Serves large-total / short-track scenarios where the computed
+    # percentage height would otherwise render as an unusably thin sliver.
     thumb = Div(
         id=ids.thumb,
         cls=combine_classes(
-            position.absolute, w.full, border_radius.field,
+            position.absolute, w.full, min_h(6), border_radius.field,
             bg_dui.base_content.opacity(30),
             cursor.grab,
         ),

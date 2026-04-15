@@ -72,7 +72,7 @@ def main():
     from cjm_fasthtml_daisyui.utilities.border_radius import border_radius
 
     from cjm_fasthtml_tailwind.utilities.spacing import p, m
-    from cjm_fasthtml_tailwind.utilities.sizing import max_w, min_h
+    from cjm_fasthtml_tailwind.utilities.sizing import max_w, min_h, h
     from cjm_fasthtml_tailwind.utilities.typography import font_size, font_weight, text_align
     from cjm_fasthtml_tailwind.utilities.layout import overflow
     from cjm_fasthtml_tailwind.utilities.flexbox_and_grid import flex_display, grow, gap
@@ -128,7 +128,11 @@ def main():
     )
     items = _generate_items(DEFAULT_ITEM_COUNT)
 
-    sb_config = ScrollbarConfig(prefix=PREFIX, track_width=3)
+    # Cursor-based scrollbar (matches card-stack & virtual-collection):
+    # position == focused item index (0..total-1), thumb is a proportional
+    # position indicator rather than a window-size proxy. auto_hide disabled
+    # so the thumb is always visible, even when visible_count >= total_items.
+    sb_config = ScrollbarConfig(prefix=PREFIX, track_width=3, auto_hide=False)
     sb_ids = ScrollbarIds(prefix=PREFIX)
 
     # =========================================================================
@@ -153,11 +157,13 @@ def main():
         return rows
 
     def _sb_state() -> ScrollbarState:
-        """Build ScrollbarState from demo state."""
+        """Build ScrollbarState from demo state (cursor-based model)."""
         return ScrollbarState(
             position=state.position,
             visible_count=state.visible_count,
             total_items=state.total_items,
+            max_position=max(0, state.total_items - 1),
+            thumb_ratio=1.0 / max(1, state.total_items),
         )
 
     def _render_viewport():
@@ -329,8 +335,8 @@ def main():
                         flex_display, gap(2),
                         border._1, border_dui.base_300,
                         bg_dui.base_100,
+                        h(200)
                     ),
-                    style="height: calc(100vh - 200px);",
                 ),
 
                 # Progress + interaction indicator

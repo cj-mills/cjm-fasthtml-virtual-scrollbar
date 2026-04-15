@@ -31,8 +31,8 @@ graph LR
     core_models[core.models<br/>models]
     js_scrollbar[js.scrollbar<br/>scrollbar]
 
-    components_scrollbar --> core_models
     components_scrollbar --> core_math
+    components_scrollbar --> core_models
     js_scrollbar --> core_models
 ```
 
