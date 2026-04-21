@@ -44,7 +44,7 @@ def render_scrollbar_thumb(
         id=ids.thumb,
         cls=combine_classes(
             position.absolute, w.full, min_h(6), border_radius.field,
-            bg_dui.base_content.opacity(30),
+            bg_dui.base_content.opacity(50),
             cursor.grab,
         ),
         style=f"top: {thumb_top:.2f}%; height: {thumb_height:.2f}%",
@@ -60,7 +60,7 @@ def _build_track_cls(track_width: int) -> str:  # Combined CSS class string
     """Build track CSS classes for a given width."""
     return combine_classes(
         w(track_width), shrink._0, position.relative, border_radius.field,
-        bg_dui.base_content.opacity(10),
+        bg_dui.base_content.opacity(20),
         cursor.pointer, select.none, touch.none,
     )
 
