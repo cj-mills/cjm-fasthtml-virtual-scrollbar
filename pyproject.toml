@@ -25,6 +25,6 @@ cjm_fasthtml_virtual_scrollbar = "cjm_fasthtml_virtual_scrollbar._modidx:d"
 version = {attr = "cjm_fasthtml_virtual_scrollbar.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["cjm_fasthtml_virtual_scrollbar"]
+include = ["cjm_fasthtml_virtual_scrollbar*"]
 
 [tool.nbdev]
