@@ -84,6 +84,8 @@ def main():
     from cjm_fasthtml_app_core.core.htmx import handle_htmx_request
     from cjm_fasthtml_app_core.core.layout import wrap_with_layout
 
+    from cjm_fasthtml_design_system.text_tiers import text_tiers
+
     from cjm_fasthtml_virtual_scrollbar.core.models import (
         ScrollbarConfig, ScrollbarState, ScrollbarIds,
     )
@@ -181,7 +183,7 @@ def main():
             id=PROGRESS_ID,
             cls=combine_classes(
                 text_align.center, p.y(2),
-                font_size.sm, text_dui.base_content.opacity(60),
+                font_size.sm, text_tiers.tertiary,
             ),
         )
 
@@ -200,7 +202,7 @@ def main():
             id=INTERACT_ID,
             cls=combine_classes(
                 p.x(3), p.y(1),
-                font_size.sm, text_dui.base_content.opacity(40),
+                font_size.sm, text_tiers.subtle,
                 border._1, border_dui.base_300, border_radius.field,
                 text_align.center,
             ),
@@ -324,7 +326,7 @@ def main():
                   f"(Up/Down/PgUp/PgDown/Home/End) or drag/click the scrollbar. "
                   f"The indicator below flashes on scrollbar interaction only.",
                   cls=combine_classes(
-                      font_size.sm, text_dui.base_content.opacity(60), m.b(4),
+                      font_size.sm, text_tiers.tertiary, m.b(4),
                   )),
 
                 # Main area: viewport + scrollbar side by side
