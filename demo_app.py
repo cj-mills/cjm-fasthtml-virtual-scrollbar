@@ -64,7 +64,8 @@ def _navigate_to_index(state: DemoState, index: int) -> None:
 
 def main():
     """Initialize scrollbar demo and return the app."""
-    from fasthtml.common import fast_app, Div, H1, P, Hidden, Script, APIRouter
+    from fasthtml.common import fast_app, Div, H1, P, Hidden, Script
+    from cjm_fasthtml_app_core.core.routing import APIRouter
 
     from cjm_fasthtml_daisyui.core.resources import get_daisyui_headers
     from cjm_fasthtml_daisyui.core.testing import create_theme_persistence_script
