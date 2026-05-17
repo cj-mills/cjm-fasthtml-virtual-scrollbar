@@ -1,0 +1,205 @@
+[
+  {
+    "objectID": "core/models.html",
+    "href": "core/models.html",
+    "title": "models",
+    "section": "",
+    "text": "def ScrollbarConfig(\n    prefix:str='sb', show_scrollbar:bool=True, min_thumb_height:int=24, track_width:int=3, auto_hide:bool=True\n)-&gt;None:\n\nInitialization-time configuration for a virtual scrollbar.",
+    "crumbs": [
+      "core",
+      "models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#scrollbarconfig",
+    "href": "core/models.html#scrollbarconfig",
+    "title": "models",
+    "section": "",
+    "text": "def ScrollbarConfig(\n    prefix:str='sb', show_scrollbar:bool=True, min_thumb_height:int=24, track_width:int=3, auto_hide:bool=True\n)-&gt;None:\n\nInitialization-time configuration for a virtual scrollbar.",
+    "crumbs": [
+      "core",
+      "models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#scrollbarstate",
+    "href": "core/models.html#scrollbarstate",
+    "title": "models",
+    "section": "ScrollbarState",
+    "text": "ScrollbarState\n\n\nScrollbarState\n\ndef ScrollbarState(\n    position:int=0, visible_count:int=1, total_items:int=0, max_position:Optional=None, thumb_ratio:Optional=None\n)-&gt;None:\n\nMutable runtime state for a virtual scrollbar.",
+    "crumbs": [
+      "core",
+      "models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#scrollbarids",
+    "href": "core/models.html#scrollbarids",
+    "title": "models",
+    "section": "ScrollbarIds",
+    "text": "ScrollbarIds\n\n\nScrollbarIds\n\ndef ScrollbarIds(\n    prefix:str='sb'\n)-&gt;None:\n\nHTML element ID generators for a scrollbar instance.",
+    "crumbs": [
+      "core",
+      "models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#tests",
+    "href": "core/models.html#tests",
+    "title": "models",
+    "section": "Tests",
+    "text": "Tests\n\n# Default config\ncfg = ScrollbarConfig()\nassert cfg.prefix == \"sb\"\nassert cfg.show_scrollbar is True\nassert cfg.min_thumb_height == 24\nassert cfg.track_width == 3\n\n\n# Default state\nstate = ScrollbarState()\nassert state.position == 0\nassert state.visible_count == 1\nassert state.total_items == 0\n\n\n# ID generation\nids = ScrollbarIds(prefix=\"cs0\")\nassert ids.track == \"cs0-scrollbar-track\"\nassert ids.thumb == \"cs0-scrollbar-thumb\"",
+    "crumbs": [
+      "core",
+      "models"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "cjm-fasthtml-virtual-scrollbar",
+    "section": "",
+    "text": "pip install cjm_fasthtml_virtual_scrollbar",
+    "crumbs": [
+      "cjm-fasthtml-virtual-scrollbar"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "cjm-fasthtml-virtual-scrollbar",
+    "section": "",
+    "text": "pip install cjm_fasthtml_virtual_scrollbar",
+    "crumbs": [
+      "cjm-fasthtml-virtual-scrollbar"
+    ]
+  },
+  {
+    "objectID": "index.html#project-structure",
+    "href": "index.html#project-structure",
+    "title": "cjm-fasthtml-virtual-scrollbar",
+    "section": "Project Structure",
+    "text": "Project Structure\nnbs/\n├── components/ (1)\n│   └── scrollbar.ipynb  # Custom scrollbar component with proportional thumb for position indication.\n├── core/ (2)\n│   ├── math.ipynb    # Pure math functions for scrollbar thumb position and size calculation.\n│   └── models.ipynb  # Data models for scrollbar configuration, state, and HTML ID generation.\n└── js/ (1)\n    └── scrollbar.ipynb  # JavaScript generator for custom scrollbar interaction (drag thumb, click track, position sync).\nTotal: 4 notebooks across 3 directories",
+    "crumbs": [
+      "cjm-fasthtml-virtual-scrollbar"
+    ]
+  },
+  {
+    "objectID": "index.html#module-dependencies",
+    "href": "index.html#module-dependencies",
+    "title": "cjm-fasthtml-virtual-scrollbar",
+    "section": "Module Dependencies",
+    "text": "Module Dependencies\ngraph LR\n    components_scrollbar[components.scrollbar&lt;br/&gt;scrollbar]\n    core_math[core.math&lt;br/&gt;math]\n    core_models[core.models&lt;br/&gt;models]\n    js_scrollbar[js.scrollbar&lt;br/&gt;scrollbar]\n\n    components_scrollbar --&gt; core_math\n    components_scrollbar --&gt; core_models\n    js_scrollbar --&gt; core_models\n3 cross-module dependencies detected",
+    "crumbs": [
+      "cjm-fasthtml-virtual-scrollbar"
+    ]
+  },
+  {
+    "objectID": "index.html#cli-reference",
+    "href": "index.html#cli-reference",
+    "title": "cjm-fasthtml-virtual-scrollbar",
+    "section": "CLI Reference",
+    "text": "CLI Reference\nNo CLI commands found in this project.",
+    "crumbs": [
+      "cjm-fasthtml-virtual-scrollbar"
+    ]
+  },
+  {
+    "objectID": "index.html#module-overview",
+    "href": "index.html#module-overview",
+    "title": "cjm-fasthtml-virtual-scrollbar",
+    "section": "Module Overview",
+    "text": "Module Overview\nDetailed documentation for each module in the project:\n\nmath (math.ipynb)\n\nPure math functions for scrollbar thumb position and size calculation.\n\n\nImport\nfrom cjm_fasthtml_virtual_scrollbar.core.math import (\n    compute_scrollbar\n)\n\n\nFunctions\ndef compute_scrollbar(position: int,           # Current position (0-indexed)\n                      visible_count: int,       # Number of visible items\n                      total_items: int,          # Total item count\n                      track_height: float,       # Scrollbar track height in px\n                      min_thumb_height: int = 24,  # Minimum thumb height in px\n                      max_position: Optional[int] = None,  # Upper bound of position range (None = total_items - visible_count)\n                      thumb_ratio: Optional[float] = None,  # Thumb height as fraction of track (None = visible_count / total_items)\n                     ) -&gt; Tuple[float, float]:   # (thumb_top_percent, thumb_height_percent)\n    \"\"\"\n    Compute scrollbar thumb position and size as percentages.\n    \n    When thumb_ratio and max_position are explicitly provided (cursor-based\n    model), the thumb size and range are fully determined by those values\n    regardless of the visible_count vs total_items relationship.\n    \"\"\"\n\n\n\nmodels (models.ipynb)\n\nData models for scrollbar configuration, state, and HTML ID generation.\n\n\nImport\nfrom cjm_fasthtml_virtual_scrollbar.core.models import (\n    ScrollbarConfig,\n    ScrollbarState,\n    ScrollbarIds\n)\n\n\nClasses\n@dataclass\nclass ScrollbarConfig:\n    \"Initialization-time configuration for a virtual scrollbar.\"\n    \n    prefix: str = 'sb'  # HTML ID prefix\n    show_scrollbar: bool = True  # Enable/disable scrollbar rendering\n    min_thumb_height: int = 24  # Minimum thumb height in pixels\n    track_width: int = 3  # Track width in Tailwind units (w-3 = 12px)\n    auto_hide: bool = True  # Hide when total_items &lt;= visible_count\n@dataclass\nclass ScrollbarState:\n    \"Mutable runtime state for a virtual scrollbar.\"\n    \n    position: int = 0  # Current position (0-indexed)\n    visible_count: int = 1  # Number of visible items\n    total_items: int = 0  # Total item count\n    max_position: Optional[int]  # Upper bound of position range (None = total_items - visible_count)\n    thumb_ratio: Optional[float]  # Thumb height as fraction of track (None = visible_count / total_items)\n@dataclass\nclass ScrollbarIds:\n    \"HTML element ID generators for a scrollbar instance.\"\n    \n    prefix: str = 'sb'  # Instance prefix\n    \n    def track(self) -&gt; str: return f\"{self.prefix}-scrollbar-track\"  # Scrollbar track container\n    \n        @property\n        def thumb(self) -&gt; str: return f\"{self.prefix}-scrollbar-thumb\"  # Draggable thumb element\n    \n    def thumb(self) -&gt; str: return f\"{self.prefix}-scrollbar-thumb\"  # Draggable thumb element\n\n\n\nscrollbar (scrollbar.ipynb)\n\nCustom scrollbar component with proportional thumb for position indication.\n\n\nImport\nfrom cjm_fasthtml_virtual_scrollbar.components.scrollbar import (\n    render_scrollbar_thumb,\n    render_scrollbar\n)\n\n\nFunctions\ndef render_scrollbar_thumb(\n    state: ScrollbarState,       # Scrollbar state\n    config: ScrollbarConfig,     # Scrollbar config\n    ids: ScrollbarIds,           # HTML IDs\n    track_height: float = 600.0, # Track height for min thumb calculation\n    oob: bool = False,           # Whether to include hx-swap-oob\n) -&gt; Div:  # Thumb element\n    \"Render the scrollbar thumb at the correct position.\"\ndef _build_track_cls(track_width: int) -&gt; str:  # Combined CSS class string\n    \"Build track CSS classes for a given width.\"\ndef render_scrollbar(\n    state: ScrollbarState,       # Scrollbar state\n    config: ScrollbarConfig,     # Scrollbar config\n    ids: ScrollbarIds,           # HTML IDs\n) -&gt; Div:  # Complete scrollbar (track + thumb)\n    \"Render the custom scrollbar with track and proportional thumb.\"\n\n\n\nscrollbar (scrollbar.ipynb)\n\nJavaScript generator for custom scrollbar interaction (drag thumb, click track, position sync).\n\n\nImport\nfrom cjm_fasthtml_virtual_scrollbar.js.scrollbar import (\n    generate_scrollbar_js\n)\n\n\nFunctions\ndef generate_scrollbar_js(\n    ids: ScrollbarIds,           # Scrollbar HTML IDs (track, thumb)\n    position_input_id: str,      # ID of hidden input (kept for API compat, not used for position sync)\n    nav_url: str,                # URL to POST target index to\n    nav_param: str = \"target_index\",  # Parameter name for the index value\n    on_interact: str = \"\",       # JS callback name, called on user interaction start (drag/click)\n) -&gt; str:  # JavaScript IIFE code fragment\n    \"Generate JS for scrollbar: thumb positioning from track data + drag/click interaction.\"",
+    "crumbs": [
+      "cjm-fasthtml-virtual-scrollbar"
+    ]
+  },
+  {
+    "objectID": "js/scrollbar.html",
+    "href": "js/scrollbar.html",
+    "title": "scrollbar",
+    "section": "",
+    "text": "Generates an IIFE that sets up all scrollbar interactions:\n\nThumb drag — pointer events translated to target indices; server-authoritative position via HTMX. No client-side optimistic thumb movement; the thumb moves only when the server responds with an OOB swap carrying fresh data attributes. This matches the purely server-driven model used for keyboard navigation in consumer libraries, eliminating dual-source-of-truth correction jitter.\nTrack click — jump to the clicked position (same HTMX round-trip shape as drag).\nPosition sync — after each htmx:afterSwap / htmx:afterSettle, re-read position/totals from the track’s data-* attributes and place the thumb.\nDeduplication — _lastNavIndex naturally throttles drag to at most one HTMX request per index change (one request per ~track_height / max_position pixels of drag).\n\nThe generated JS is consumer-agnostic. It reads position from the scrollbar track’s data-position attribute and POSTs to a configurable navigation URL.\n\n\n\n\ndef generate_scrollbar_js(\n    ids:ScrollbarIds, # Scrollbar HTML IDs (track, thumb)\n    position_input_id:str, # ID of hidden input (kept for API compat, not used for position sync)\n    nav_url:str, # URL to POST target index to\n    nav_param:str='target_index', # Parameter name for the index value\n    on_interact:str='', # JS callback name, called on user interaction start (drag/click)\n)-&gt;str: # JavaScript IIFE code fragment\n\nGenerate JS for scrollbar: thumb positioning from track data + drag/click interaction.",
+    "crumbs": [
+      "js",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "js/scrollbar.html#generate_scrollbar_js",
+    "href": "js/scrollbar.html#generate_scrollbar_js",
+    "title": "scrollbar",
+    "section": "",
+    "text": "Generates an IIFE that sets up all scrollbar interactions:\n\nThumb drag — pointer events translated to target indices; server-authoritative position via HTMX. No client-side optimistic thumb movement; the thumb moves only when the server responds with an OOB swap carrying fresh data attributes. This matches the purely server-driven model used for keyboard navigation in consumer libraries, eliminating dual-source-of-truth correction jitter.\nTrack click — jump to the clicked position (same HTMX round-trip shape as drag).\nPosition sync — after each htmx:afterSwap / htmx:afterSettle, re-read position/totals from the track’s data-* attributes and place the thumb.\nDeduplication — _lastNavIndex naturally throttles drag to at most one HTMX request per index change (one request per ~track_height / max_position pixels of drag).\n\nThe generated JS is consumer-agnostic. It reads position from the scrollbar track’s data-position attribute and POSTs to a configurable navigation URL.\n\n\n\n\ndef generate_scrollbar_js(\n    ids:ScrollbarIds, # Scrollbar HTML IDs (track, thumb)\n    position_input_id:str, # ID of hidden input (kept for API compat, not used for position sync)\n    nav_url:str, # URL to POST target index to\n    nav_param:str='target_index', # Parameter name for the index value\n    on_interact:str='', # JS callback name, called on user interaction start (drag/click)\n)-&gt;str: # JavaScript IIFE code fragment\n\nGenerate JS for scrollbar: thumb positioning from track data + drag/click interaction.",
+    "crumbs": [
+      "js",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "js/scrollbar.html#tests",
+    "href": "js/scrollbar.html#tests",
+    "title": "scrollbar",
+    "section": "Tests",
+    "text": "Tests\n\nids = ScrollbarIds(prefix=\"demo\")\njs = generate_scrollbar_js(\n    ids=ids,\n    position_input_id=\"demo-position-input\",\n    nav_url=\"/demo/nav_to_index\",\n    nav_param=\"target_index\",\n)\n\n# Verify key IDs are embedded\nassert 'demo-scrollbar-track' in js\nassert 'demo-scrollbar-thumb' in js\n\n# Verify nav URL and param\nassert '/demo/nav_to_index' in js\nassert 'target_index: index' in js\n\n# Verify IIFE wrapping\nassert '(function()' in js\nassert '})();' in js\n\n# Verify data attribute names match render_scrollbar\nassert 'dataset.totalItems' in js\nassert 'dataset.visibleCount' in js\nassert 'dataset.maxPosition' in js\nassert 'dataset.thumbRatio' in js\nassert 'dataset.position' in js  # Self-contained position sync\nassert '_getMaxPosition' in js\nassert '_getThumbHeightPct' in js\nassert '_isCursorMode' in js  # Cursor-mode detection for always-visible thumb\n\n# --- Pure server-authoritative drag model ---\n# Drag fires HTMX; thumb moves via OOB response, not client-side paint.\nassert '_onDragMove' in js\n# No client-side thumb-position helper should remain (its role is now the OOB response).\nassert '_updateThumbPosition' not in js\n# No drag-time cursor/height tracking needed in a server-authoritative model.\nassert '_lastPointerY' not in js\nassert '_dragThumbHeightPx' not in js\n# Both HTMX mutation events are wired.\nassert \"'htmx:afterSwap'\" in js\nassert \"'htmx:afterSettle'\" in js\nassert '_onHtmxMutation' in js\n# Dedup lives in _navToIndex — one HTMX request per distinct target index.\nassert 'index === _lastNavIndex' in js\n\n# position_input_id is NOT referenced in the JS (kept for API compat only)\nassert 'demo-position-input' not in js\n\n# on_interact callback NOT present when not provided\nassert 'on_interact' not in js.lower() or 'onInteract' not in js\n\n\n# Custom nav param — position_input_id kept for API compat but not in JS output\njs2 = generate_scrollbar_js(\n    ids=ScrollbarIds(prefix=\"cs0\"),\n    position_input_id=\"cs0-focused-index\",\n    nav_url=\"/card-stack/nav_to_index\",\n    nav_param=\"target_index\",\n)\nassert 'cs0-scrollbar-track' in js2\nassert '/card-stack/nav_to_index' in js2\nassert 'dataset.position' in js2  # Reads from track, not hidden input\n\n# on_interact callback present when provided\njs3 = generate_scrollbar_js(\n    ids=ScrollbarIds(prefix=\"sb1\"),\n    position_input_id=\"sb1-pos\",\n    nav_url=\"/sb1/nav_to_index\",\n    on_interact=\"onSb1Interact\",\n)\nassert \"onSb1Interact\" in js3\nassert \"window['onSb1Interact']\" in js3\n# Callback invocation appears in both pointerdown handlers (thumb + track)\n# Each handler has: typeof check + call = 2 occurrences per handler, 4 total\nassert js3.count(\"window['onSb1Interact']\") == 4",
+    "crumbs": [
+      "js",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "components/scrollbar.html",
+    "href": "components/scrollbar.html",
+    "title": "scrollbar",
+    "section": "",
+    "text": "def render_scrollbar_thumb(\n    state:ScrollbarState, # Scrollbar state\n    config:ScrollbarConfig, # Scrollbar config\n    ids:ScrollbarIds, # HTML IDs\n    track_height:float=600.0, # Track height for min thumb calculation\n    oob:bool=False, # Whether to include hx-swap-oob\n)-&gt;functools.partial(&lt;function ft_hx at 0x7f0838c1e200&gt;, 'div'): # Thumb element\n\nRender the scrollbar thumb at the correct position.",
+    "crumbs": [
+      "components",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "components/scrollbar.html#render_scrollbar_thumb",
+    "href": "components/scrollbar.html#render_scrollbar_thumb",
+    "title": "scrollbar",
+    "section": "",
+    "text": "def render_scrollbar_thumb(\n    state:ScrollbarState, # Scrollbar state\n    config:ScrollbarConfig, # Scrollbar config\n    ids:ScrollbarIds, # HTML IDs\n    track_height:float=600.0, # Track height for min thumb calculation\n    oob:bool=False, # Whether to include hx-swap-oob\n)-&gt;functools.partial(&lt;function ft_hx at 0x7f0838c1e200&gt;, 'div'): # Thumb element\n\nRender the scrollbar thumb at the correct position.",
+    "crumbs": [
+      "components",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "components/scrollbar.html#render_scrollbar",
+    "href": "components/scrollbar.html#render_scrollbar",
+    "title": "scrollbar",
+    "section": "render_scrollbar",
+    "text": "render_scrollbar\n\n\nrender_scrollbar\n\ndef render_scrollbar(\n    state:ScrollbarState, # Scrollbar state\n    config:ScrollbarConfig, # Scrollbar config\n    ids:ScrollbarIds, # HTML IDs\n)-&gt;functools.partial(&lt;function ft_hx at 0x7f0838c1e200&gt;, 'div'): # Complete scrollbar (track + thumb)\n\nRender the custom scrollbar with track and proportional thumb.",
+    "crumbs": [
+      "components",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "components/scrollbar.html#tests",
+    "href": "components/scrollbar.html#tests",
+    "title": "scrollbar",
+    "section": "Tests",
+    "text": "Tests\n\nfrom fasthtml.common import to_xml\n\n\n# Hidden when all items visible\nstate = ScrollbarState(position=0, visible_count=10, total_items=5)\nconfig = ScrollbarConfig(prefix=\"test\")\nids = ScrollbarIds(prefix=\"test\")\nhtml = to_xml(render_scrollbar(state, config, ids))\nassert 'hidden' in html\nassert 'test-scrollbar-track' in html\n\n\n# Visible with thumb when items exceed visible (default max_position)\nstate = ScrollbarState(position=5, visible_count=10, total_items=100)\nhtml = to_xml(render_scrollbar(state, config, ids))\nassert 'test-scrollbar-track' in html\nassert 'test-scrollbar-thumb' in html\nassert 'data-total-items=\"100\"' in html\nassert 'data-visible-count=\"10\"' in html\nassert 'data-max-position=\"90\"' in html  # Default: 100 - 10\nassert 'data-position=\"5\"' in html  # Self-contained position\nassert 'data-thumb-ratio' not in html  # Not present when None\nassert 'hidden' not in html\n\n# Card-stack model: explicit max_position + thumb_ratio\nstate_cs = ScrollbarState(position=50, visible_count=3, total_items=100, max_position=99, thumb_ratio=1/100)\nhtml_cs = to_xml(render_scrollbar(state_cs, config, ids))\nassert 'data-max-position=\"99\"' in html_cs\nassert 'data-thumb-ratio=\"0.010000\"' in html_cs\nassert 'data-position=\"50\"' in html_cs\n\n\n# OOB thumb\nthumb = render_scrollbar_thumb(state, config, ids, oob=True)\nhtml = to_xml(thumb)\nassert 'hx-swap-oob=\"outerHTML\"' in html\n\n# Thumb has CSS min-height floor (24px / min-h-6) — safety net for large-total /\n# short-track cases where the percentage height would otherwise render as a sliver.\nthumb_default = render_scrollbar_thumb(state, config, ids)\nhtml_default = to_xml(thumb_default)\nassert 'min-h-6' in html_default",
+    "crumbs": [
+      "components",
+      "scrollbar"
+    ]
+  },
+  {
+    "objectID": "core/math.html#tests",
+    "href": "core/math.html#tests",
+    "title": "math",
+    "section": "Tests",
+    "text": "Tests\n\n# Default (window) mode: all items visible → thumb fills track\nassert compute_scrollbar(0, 10, 5, 600.0) == (0.0, 100.0)\nassert compute_scrollbar(0, 10, 10, 600.0) == (0.0, 100.0)\nassert compute_scrollbar(0, 1, 0, 600.0) == (0.0, 100.0)\n\n# Cursor-based mode: all items visible but explicit thumb_ratio/max_position\n# → thumb uses the ratio, NOT 100%\ntop, height = compute_scrollbar(0, 15, 10, 600.0, max_position=9, thumb_ratio=1/10)\nassert abs(height - 10.0) &lt; 0.01  # 1/10 = 10%, not 100%\nassert top == 0.0\n\n# Cursor at middle when all visible\ntop, height = compute_scrollbar(5, 15, 10, 600.0, max_position=9, thumb_ratio=1/10)\nexpected_top = (5 / 9) * (100.0 - height)\nassert abs(top - expected_top) &lt; 0.01\nprint(\"cursor-based mode (all items visible) tests passed\")\n\n\n# Position at start → thumb at top (min thumb height may clamp upward)\ntop, height = compute_scrollbar(0, 15, 500, 600.0)\nassert top == 0.0\nnatural_pct = (15 / 500) * 100.0  # 3%\nmin_pct = (24 / 600.0) * 100.0    # 4%\nassert height == max(natural_pct, min_pct)  # Clamped to min\n\n\n# Position at end → thumb at bottom\ntop, height = compute_scrollbar(485, 15, 500, 600.0)\nassert abs(top - (100.0 - height)) &lt; 0.01  # Thumb bottom aligns with track bottom\n\n\n# Min thumb height enforcement\ntop, height = compute_scrollbar(0, 1, 10000, 600.0, min_thumb_height=24)\nmin_pct = (24 / 600.0) * 100.0  # 4%\nassert height == min_pct  # Natural height (0.01%) is below min\n\n\n# Mid-position\ntop, height = compute_scrollbar(250, 15, 500, 600.0)\nmax_start = 500 - 15\nexpected_top = (250 / max_start) * (100.0 - height)\nassert abs(top - expected_top) &lt; 0.01\n\n\n# Card-stack model: max_position = total_items - 1\n# Position at last item → thumb at bottom\ntop, height = compute_scrollbar(499, 3, 500, 600.0, max_position=499)\nassert abs(top - (100.0 - height)) &lt; 0.01  # Thumb at bottom\n\n# Position at start → thumb at top\ntop, height = compute_scrollbar(0, 3, 500, 600.0, max_position=499)\nassert top == 0.0\n\n# Mid-position with card-stack model\ntop, height = compute_scrollbar(250, 3, 500, 600.0, max_position=499)\nexpected_top = (250 / 499) * (100.0 - height)\nassert abs(top - expected_top) &lt; 0.01\n\n# Compare: without max_position, same position overshoots\ntop_default, _ = compute_scrollbar(250, 3, 500, 600.0)  # max = 500-3 = 497\ntop_explicit, _ = compute_scrollbar(250, 3, 500, 600.0, max_position=499)\nassert top_default != top_explicit  # Different because max ranges differ\n\nprint(\"max_position (card-stack model) tests passed\")\n\n\n# thumb_ratio override\n# Card stack with 25 items, visible_count=7 → default thumb = 28%\n# With thumb_ratio = 1/25 = 4%, thumb is much thinner\n_, height_default = compute_scrollbar(0, 7, 25, 600.0)\nassert abs(height_default - 28.0) &lt; 0.01\n\n_, height_ratio = compute_scrollbar(0, 7, 25, 600.0, thumb_ratio=1/25)\nassert abs(height_ratio - 4.0) &lt; 0.01\n\n# min_thumb_height still enforced with thumb_ratio\n_, height_tiny = compute_scrollbar(0, 7, 25, 600.0, thumb_ratio=0.001)\nmin_pct = (24 / 600.0) * 100.0\nassert height_tiny == min_pct  # Clamped to min\n\n# thumb_ratio=None behaves same as default\ntop1, h1 = compute_scrollbar(10, 7, 25, 600.0, thumb_ratio=None)\ntop2, h2 = compute_scrollbar(10, 7, 25, 600.0)\nassert top1 == top2 and h1 == h2\n\nprint(\"thumb_ratio tests passed\")",
+    "crumbs": [
+      "core",
+      "math"
+    ]
+  }
+]
